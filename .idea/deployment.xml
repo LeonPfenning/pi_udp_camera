@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="admin@169.254.148.62:22" remoteFilesAllowedToDisappearOnAutoupload="false" showNewOnTargetInSync="false">
+    <serverData>
+      <paths name="RPI_Cam">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="admin@169.254.148.62:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/admin/Desktop/RPI_Cam/RPI" local="$PROJECT_DIR$/RPI" />
+            <mapping deploy="/home/admin/Desktop/RPI_Cam/Configuration" local="$PROJECT_DIR$/Configuration" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="pi@192.168.178.105:22">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="pi@192.168.178.93:22">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

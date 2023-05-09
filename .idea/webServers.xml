@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6dbd73a7-8d16-4104-ad09-8fa0d7068f69" name="RPI_Cam">
+        <fileTransfer rootFolder="/home/admin/Desktop/RPI_Cam" accessType="SFTP" host="169.254.148.62" port="22" sshConfigId="833a4898-0a96-4ac1-835f-5fc579feac96" sshConfig="admin@169.254.148.62:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
