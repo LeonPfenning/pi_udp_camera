@@ -6,7 +6,8 @@ from picamera2 import Picamera2
 
 
 class pi_udp_camera_rpi:
-    def __init__(self):
+    def __init__(self, camera_config_file='camera_config_HQ.json'):
+        self.camera_config_file = camera_config_file
         self.open_server_connection()
         self.camera_main_loop()
 
@@ -23,7 +24,7 @@ class pi_udp_camera_rpi:
     def camera_main_loop(self):
         while True:
             camera_modus = self.receive_cmd()
-            print(camera_modus)
+            print('camera modus: ', camera_modus)
             self.picam2 = self.camera_setup(camera_modus)
             try:
                 while True:
@@ -67,19 +68,18 @@ class pi_udp_camera_rpi:
 
     def camera_setup(self, camera_modus='91'):
         picam2 = Picamera2()
-        f = open("../Configuration/camera_config.json")
+        f = open('../Configuration/' + self.camera_config_file)
         data = json.load(f)
-        print("asdf")
-        if camera_modus == data['90']:
+        if camera_modus == '90':
             res = data['90']['res']
             forma = data['90']['forma']
-        elif camera_modus == data['91']:
+        elif camera_modus == '91':
             res = data['91']['res']
             forma = data['91']['forma']
-        elif camera_modus == data['92']:
+        elif camera_modus == '92':
             res = data['92']['res']
             forma = data['92']['forma']
-        elif camera_modus == data['93']:
+        elif camera_modus == '93':
             res = data['93']['res']
             forma = data['93']['forma']
         else:
