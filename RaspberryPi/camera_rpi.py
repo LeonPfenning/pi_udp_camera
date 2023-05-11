@@ -7,6 +7,8 @@ from picamera2 import Picamera2
 
 class pi_udp_camera_rpi:
     def __init__(self, camera_config_file='camera_config_HQ.json'):
+        self.GET_IMAGE_MSG = '1'
+        self.CHANGE_EXPOSURE_MSG = '2'
         self.camera_config_file = camera_config_file
         self.open_server_connection()
         self.camera_main_loop()
@@ -29,11 +31,10 @@ class pi_udp_camera_rpi:
             try:
                 while True:
                     cmd = self.receive_cmd()
-                    if cmd == '1':
+                    if cmd == self.GET_IMAGE_MSG:
                         stream = self.get_img_stream()
                         self.send_data(stream)
-                        # send_img_known_size(conn, stream)
-                    elif cmd == '2':
+                    elif cmd == self.CHANGE_EXPOSURE_MSG:
                         data = self.conn.recv(1024)
                         if not data:
                             print("recieved package with zero length")
@@ -71,24 +72,23 @@ class pi_udp_camera_rpi:
         f = open('../Configuration/' + self.camera_config_file)
         data = json.load(f)
         if camera_modus == '90':
-            res = data['90']['res']
-            forma = data['90']['forma']
+            image_size = data['90']['image_size']
+            format = data['90']['format']
         elif camera_modus == '91':
-            res = data['91']['res']
-            forma = data['91']['forma']
+            image_size = data['91']['image_size']
+            format = data['91']['format']
         elif camera_modus == '92':
-            res = data['92']['res']
-            forma = data['92']['forma']
+            image_size = data['92']['image_size']
+            format = data['92']['format']
         elif camera_modus == '93':
-            res = data['93']['res']
-            forma = data['93']['forma']
+            image_size = data['93']['image_size']
+            format = data['93']['format']
         else:
-            res = data['default']['res']
-            forma = data['default']['forma']
+            image_size = data['default']['image_size']
+            format = data['default']['format']
 
         config = picam2.create_still_configuration(buffer_count=1,
-                                                   main={"size": res,
-                                                         "format": forma},
+                                                   main={"size": image_size, "format": format},
                                                    queue=False)
         picam2.configure(config)
         print(picam2.align_configuration(config))

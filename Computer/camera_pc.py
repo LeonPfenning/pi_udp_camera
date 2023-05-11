@@ -14,6 +14,9 @@ import json
 class pi_udp_camera_pc:
     def __init__(self, IP='141.100.109.17', Port=8123, camera_config_file='camera_config_HQ.json',
                  camera_modus='91', calibrated_camera=False):
+        self.SHUTDOWN_MSG = '0'
+        self.GET_IMAGE_MSG = '1'
+        self.CHANGE_EXPOSURE_MSG = '2'
         self.IP = IP
         self.Port = Port
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,31 +39,31 @@ class pi_udp_camera_pc:
         f = open('../Configuration/' + camera_config_file)
         data = json.load(f)
         if camera_modus == '90':
-            self.res = data['90']['res']
-            self.forma = data['90']['forma']
-            self.img_shape = data['90']['img_shape']
+            self.image_size = data['90']['image_size']
+            self.format = data['90']['format']
+            self.file_size = data['90']['file_size']
         elif camera_modus == '91':
-            self.res = data['91']['res']
-            self.forma = data['91']['forma']
-            self.img_shape = data['91']['img_shape']
+            self.image_size = data['91']['image_size']
+            self.format = data['91']['format']
+            self.file_size = data['91']['file_size']
         elif camera_modus == '92':
-            self.res = data['92']['res']
-            self.forma = data['92']['forma']
-            self.img_shape = data['92']['img_shape']
+            self.image_size = data['92']['image_size']
+            self.format = data['92']['format']
+            self.file_size = data['92']['file_size']
         elif camera_modus == '93':
-            self.res = data['93']['res']
-            self.forma = data['93']['forma']
-            self.img_shape = data['93']['img_shape']
+            self.image_size = data['93']['image_size']
+            self.format = data['93']['format']
+            self.file_size = data['93']['file_size']
         else:
-            self.res = data['default']['res']
-            self.forma = data['default']['forma']
-            self.img_shape = data['default']['img_shape']
+            self.image_size = data['default']['image_size']
+            self.format = data['default']['format']
+            self.file_size = data['default']['file_size']
 
     def _get_img_stream(self):
         # send request to get image ("1") to server.
         # Server will answer with the byte count of the image encoded in to 4 byte
         # After we know how many bytes the image has, we read data till we received the entire image
-        msg = "1"
+        msg = self.GET_IMAGE_MSG
         self.client_socket.sendall(msg.encode())
         # get byte count of data to read
         data = self.rdFile.read(struct.calcsize('<L'))
@@ -74,10 +77,10 @@ class pi_udp_camera_pc:
     def get_image(self):
         image_stream = self._get_img_stream()
         numpy_img_bytes = np.frombuffer(image_stream, 'uint8')
-        if self.forma == 'YUV420':
-            numpy_img_bytes = numpy_img_bytes.reshape(self.img_shape)           # (1140, 1024)   # (2280, 2048)
+        if self.format == 'YUV420':
+            numpy_img_bytes = numpy_img_bytes.reshape(self.file_size)           # (1140, 1024)   # (2280, 2048)
             img = cv2.cvtColor(numpy_img_bytes, cv2.COLOR_YUV420p2RGB)
-            img = img[0:self.res[1], 0:self.res[0], :]      # remove pixel without information (see: picamera2 yuv)
+            img = img[0:self.image_size[1], 0:self.image_size[0], :]      # remove pixel without information (see: picamera2 yuv)
         else:
             raise NotImplemented("only yuv implemented yet")
         return img
@@ -88,7 +91,7 @@ class pi_udp_camera_pc:
         self.set_exposure(msg)
 
     def set_exposure(self, exp):
-        msg = "2"
+        msg = self.CHANGE_EXPOSURE_MSG
         self.client_socket.sendall(msg.encode())
         time.sleep(0.1)
         exp = str(exp)
@@ -146,7 +149,7 @@ class pi_udp_camera_pc:
         self.client_socket.close()
 
     def shutdown(self):
-        msg = "0"
+        msg = self.SHUTDOWN_MSG
         try:
             self.client_socket.sendall(msg.encode())
             self.close()
@@ -179,7 +182,7 @@ class pi_udp_camera_pc:
         self.dist = np.array([0, 0, 0, 0, 0])
         self.mapx, self.mapy = cv2.initUndistortRectifyMap(cameraMatrix=self.mtx, distCoeffs=self.dist,
                                                            R=None, newCameraMatrix=self.mtx,
-                                                           size=self.res, m1type=5)
+                                                           size=self.image_size, m1type=5)
 
     def __draw(self, img, corners, imgpts):
         corner = tuple(corners[0].ravel())
@@ -224,10 +227,10 @@ if __name__ == '__main__':
     IP = '169.254.148.62'
     Port = 8123
     myCam = pi_udp_camera_pc(IP=IP, Port=Port, camera_config_file='camera_config_HQ.json',
-                     camera_modus='91', calibrated_camera=True)
+                             camera_modus='91', calibrated_camera=True)
     myCam.speed_test(count=50)
 
-    myCam.set_exposure(50000)        # 50000 => 20Hz
+    myCam.set_exposure(20000)        # 50000 => 20Hz
     cnt = 0
     t = time.perf_counter()
     while True:
@@ -235,7 +238,7 @@ if __name__ == '__main__':
             # myCam.change_exposure()
             # myCam.set_exposure(20000)
             # myCam.get_image()
-            myCam.preview_img(checkerboard_detection=True)
+            myCam.preview_img(checkerboard_detection=False)
 
             cnt += 1
             elapsed = time.perf_counter() - t

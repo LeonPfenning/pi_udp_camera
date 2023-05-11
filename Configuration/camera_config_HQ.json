@@ -1,59 +1,64 @@
 {
     "90": {
-        "forma": "YUV420",
-        "img_shape": [
+        "file_size": [
             4560,
             4096
         ],
-        "res": [
+        "format": "YUV420",
+        "image_size": [
             4056,
             3040
         ]
     },
     "91": {
-        "forma": "YUV420",
-        "img_shape": [
+        "file_size": [
             2280,
             2048
         ],
-        "res": [
+        "format": "YUV420",
+        "image_size": [
             2028,
             1520
         ]
     },
     "92": {
-        "forma": "YUV420",
-        "img_shape": [
+        "file_size": [
             1140,
             1024
         ],
-        "res": [
+        "format": "YUV420",
+        "image_size": [
             1014,
             760
         ]
     },
     "93": {
-        "forma": "YUV420",
-        "img_shape": [
+        "file_size": [
             570,
             512
         ],
-        "res": [
+        "format": "YUV420",
+        "image_size": [
             507,
             380
         ]
     },
-    "datetime": "09/05/2023 17:09:57",
+    "camera": "RPI HQ CAM",
+    "datetime": "11/05/2023 09:49:52",
     "default": {
-        "forma": "YUV420",
-        "img_shape": [
+        "file_size": [
             2280,
             2048
         ],
-        "res": [
+        "format": "YUV420",
+        "image_size": [
             2028,
             1520
         ]
     },
-    "description": "RPI HQ CAM"
+    "description": {
+        "file_size": "shape of the file that is send",
+        "format": "see. picamera2-manual page. 64 Appendix A: Pixel and image formats(e.g. YUV420, RGB888)",
+        "image_size": "Resolution of the Image"
+    }
 }

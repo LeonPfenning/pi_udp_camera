@@ -9,8 +9,8 @@ import io
 picam2 = Picamera2()
 res = (4056, 3040)
 res = (2028, 1520)
-#res = (1520, 2028)
-#res = (1014, 760)
+# res = (1520, 2028)
+# res = (1014, 760)
 #res = (507, 380)
 forma = "YUV420"
 #forma = "BGR888"
