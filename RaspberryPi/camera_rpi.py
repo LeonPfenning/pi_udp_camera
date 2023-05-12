@@ -4,11 +4,18 @@ import time
 import json
 from picamera2 import Picamera2
 
-
 class pi_udp_camera_rpi:
     def __init__(self, camera_config_file='camera_config_HQ.json'):
+        # Constants
+        self.CAM_MODUS_1 = '90'
+        self.CAM_MODUS_2 = '91'
+        self.CAM_MODUS_3 = '92'
+        self.CAM_MODUS_4 = '93'
+
         self.GET_IMAGE_MSG = '1'
         self.CHANGE_EXPOSURE_MSG = '2'
+
+        # Init
         self.camera_config_file = camera_config_file
         self.open_server_connection()
         self.camera_main_loop()
@@ -34,6 +41,7 @@ class pi_udp_camera_rpi:
                     if cmd == self.GET_IMAGE_MSG:
                         stream = self.get_img_stream()
                         self.send_data(stream)
+
                     elif cmd == self.CHANGE_EXPOSURE_MSG:
                         data = self.conn.recv(1024)
                         if not data:
@@ -41,6 +49,7 @@ class pi_udp_camera_rpi:
                             break
                         val = data.decode()
                         self.picam2.set_controls({"ExposureTime": int(val)})
+
                     else:
                         print("unknown command - maybe connection was shut down")
                         raise Exception("computer shutdown")
@@ -63,26 +72,28 @@ class pi_udp_camera_rpi:
     def send_data(self, byte_stream):
         mk_file = self.conn.makefile('wb')
         # send length of data encoded in 4byte (so client knows what to listen for)
+        # kind of overkill since we use uncompressed images that allways have the same size
+        # with this implementation we could send compressed images too
         mk_file.write(struct.pack('<L', len(byte_stream)))
         mk_file.write(byte_stream)
         mk_file.close()
 
-    def camera_setup(self, camera_modus='91'):
+    def camera_setup(self, received_camera_modus_msg='91'):
         picam2 = Picamera2()
         f = open('../Configuration/' + self.camera_config_file)
         data = json.load(f)
-        if camera_modus == '90':
-            image_size = data['90']['image_size']
-            format = data['90']['format']
-        elif camera_modus == '91':
-            image_size = data['91']['image_size']
-            format = data['91']['format']
-        elif camera_modus == '92':
-            image_size = data['92']['image_size']
-            format = data['92']['format']
-        elif camera_modus == '93':
-            image_size = data['93']['image_size']
-            format = data['93']['format']
+        if received_camera_modus_msg == self.CAM_MODUS_1:
+            image_size = data[self.CAM_MODUS_1]['image_size']
+            format = data[self.CAM_MODUS_1]['format']
+        elif received_camera_modus_msg == self.CAM_MODUS_2:
+            image_size = data[self.CAM_MODUS_2]['image_size']
+            format = data[self.CAM_MODUS_2]['format']
+        elif received_camera_modus_msg == self.CAM_MODUS_3:
+            image_size = data[self.CAM_MODUS_3]['image_size']
+            format = data[self.CAM_MODUS_3]['format']
+        elif received_camera_modus_msg == self.CAM_MODUS_4:
+            image_size = data[self.CAM_MODUS_4]['image_size']
+            format = data[self.CAM_MODUS_4]['format']
         else:
             image_size = data['default']['image_size']
             format = data['default']['format']
@@ -103,7 +114,7 @@ class pi_udp_camera_rpi:
         return picam2
 
     def receive_cmd(self):
-        data = self.conn.recv(128)
+        data = self.conn.recv(8)
         if not data:
             print("recieved package with zero length")
             return None

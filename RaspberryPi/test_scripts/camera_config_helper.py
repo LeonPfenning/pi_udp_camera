@@ -8,31 +8,32 @@ def configure_camera(camera_obj, img_resolution, format):
 	camera_obj.start()
 	stream = camera_obj.capture_array("main")
 
-	print("image_Size: ", img_resolution)
 	print("file_Size: ", stream.shape)
+	print("format:", format)
+	print("image_Size: ", img_resolution)
+
 
 	camera_obj.stop()
 	print()
 
 if __name__ == '__main__':
 	picam2 = Picamera2()
-	print()
-
 	sensor_modes = picam2.sensor_modes
-	print()
 
-	# sensor modes directly supported by camera (no post processing on isp necessary)
+	print("\n\n Camera Configurations:")
+	print("native camera configs. no postprocessing on isp necessary:")
 	for ele in sensor_modes:
 		print(ele)
 		img_resolution = ele['size']
 		format = "YUV420"
 		configure_camera(picam2, img_resolution, format)
 
-
 	# images are postprocessed / resized by the rpi ISP
-	# Any value can be entered bellow but I normally go for the smallest full FOV setting
+	# Any value could be entered bellow.
+	# I normally go for the smallest full FOV resolution.
 	full_frame_res = (2028, 1520)					# Enter the initial value here
 
+	print("camera configs. that requires postprocessing on isp:")
 	res_halfe = (int(full_frame_res[0]/2), int(full_frame_res[1]/2))
 	format = "YUV420"
 	configure_camera(picam2, res_halfe, format)

@@ -6,7 +6,7 @@ calibration_dump = {
     "camera": "RPI HQ CAM",
     "description": {
         "image_size": "Resolution of the Image",
-        "format": "see. picamera2-manual page. 64 Appendix A: Pixel and image formats(e.g. YUV420, RGB888)",
+        "format": "see picamera2-manual page. 64 Appendix A: Pixel and image formats(e.g. YUV420, RGB888)",
         "file_size": "shape of the file that is send"},
     "datetime": now.strftime("%d/%m/%Y %H:%M:%S"),
     "90": {

@@ -14,9 +14,17 @@ import json
 class pi_udp_camera_pc:
     def __init__(self, IP='141.100.109.17', Port=8123, camera_config_file='camera_config_HQ.json',
                  camera_modus='91', calibrated_camera=False):
+        # Costants
+        self.CAM_MODUS_1 = '90'
+        self.CAM_MODUS_2 = '91'
+        self.CAM_MODUS_3 = '92'
+        self.CAM_MODUS_4 = '93'
+
         self.SHUTDOWN_MSG = '0'
         self.GET_IMAGE_MSG = '1'
         self.CHANGE_EXPOSURE_MSG = '2'
+
+        # Init
         self.IP = IP
         self.Port = Port
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,7 +40,7 @@ class pi_udp_camera_pc:
 
     def __init_camera_modi(self, camera_config_file, camera_modus):
         # let camera know what modus to run in
-        self.client_socket.sendall(camera_modus.encode())
+        self.client_socket.send(camera_modus.encode())
         time.sleep(0.5)
 
         # locally initialize the camera modus
@@ -64,7 +72,7 @@ class pi_udp_camera_pc:
         # Server will answer with the byte count of the image encoded in to 4 byte
         # After we know how many bytes the image has, we read data till we received the entire image
         msg = self.GET_IMAGE_MSG
-        self.client_socket.sendall(msg.encode())
+        self.client_socket.send(msg.encode())
         # get byte count of data to read
         data = self.rdFile.read(struct.calcsize('<L'))
         image_len = struct.unpack('<L', data)[0]
@@ -92,10 +100,10 @@ class pi_udp_camera_pc:
 
     def set_exposure(self, exp):
         msg = self.CHANGE_EXPOSURE_MSG
-        self.client_socket.sendall(msg.encode())
+        self.client_socket.send(msg.encode())
         time.sleep(0.1)
         exp = str(exp)
-        self.client_socket.sendall(exp.encode())
+        self.client_socket.send(exp.encode())
         time.sleep(0.5)
 
     def preview_img(self, checkerboard_detection=False):
@@ -134,16 +142,7 @@ class pi_udp_camera_pc:
         else:
             print("checkerboard not detected don't save img")
 
-    def reconnect(self):
-        try:
-            self.close()
-        except:
-            pass
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect((self.IP, self.Port))
-        self.rdFile = self.client_socket.makefile('rb')
-
-    def close(self):
+    def __close_communication(self):
         print("closed all")
         self.rdFile.close()
         self.client_socket.close()
@@ -151,8 +150,8 @@ class pi_udp_camera_pc:
     def shutdown(self):
         msg = self.SHUTDOWN_MSG
         try:
-            self.client_socket.sendall(msg.encode())
-            self.close()
+            self.client_socket.send(msg.encode())
+            self.__close_communication()
         except:
             pass
         time.sleep(0.25)
@@ -227,9 +226,9 @@ if __name__ == '__main__':
     IP = '169.254.148.62'
     Port = 8123
     myCam = pi_udp_camera_pc(IP=IP, Port=Port, camera_config_file='camera_config_HQ.json',
-                             camera_modus='91', calibrated_camera=True)
-    myCam.speed_test(count=50)
+                             camera_modus='92', calibrated_camera=True)
 
+    myCam.speed_test(count=500)
     myCam.set_exposure(20000)        # 50000 => 20Hz
     cnt = 0
     t = time.perf_counter()
@@ -247,6 +246,9 @@ if __name__ == '__main__':
                 print(cnt/elapsed)
                 t = time.perf_counter()
                 cnt = 0
+
+            if cnt == 100:
+                break
         except:
             print("called shutdown")
             myCam.shutdown()
