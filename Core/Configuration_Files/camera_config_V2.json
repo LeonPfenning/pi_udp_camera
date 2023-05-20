@@ -1,0 +1,85 @@
+{
+    "90": {
+        "file_size": [
+            3696,
+            3328
+        ],
+        "format": "YUV420",
+        "image_size": [
+            3280,
+            2464
+        ],
+        "raw_img_format": [
+            3280,
+            2464
+        ]
+    },
+    "91": {
+        "file_size": [
+            1848,
+            1664
+        ],
+        "format": "YUV420",
+        "image_size": [
+            1640,
+            1232
+        ],
+        "raw_img_format": [
+            1640,
+            1232
+        ]
+    },
+    "92": {
+        "file_size": [
+            924,
+            832
+        ],
+        "format": "YUV420",
+        "image_size": [
+            820,
+            616
+        ],
+        "raw_img_format": [
+            1640,
+            1232
+        ]
+    },
+    "93": {
+        "file_size": [
+            462,
+            448
+        ],
+        "format": "YUV420",
+        "image_size": [
+            410,
+            308
+        ],
+        "raw_img_format": [
+            1640,
+            1232
+        ]
+    },
+    "camera": "RPI V2 CAM",
+    "datetime": "17/05/2023 17:25:51",
+    "default": {
+        "file_Size": [
+            1848,
+            1664
+        ],
+        "format": "YUV420",
+        "image_Size": [
+            1640,
+            1232
+        ],
+        "raw_img_format": [
+            1640,
+            1232
+        ]
+    },
+    "description": {
+        "file_size": "shape of the file that is send",
+        "format": "see picamera2-manual page. 64 Appendix A: Pixel and image formats(e.g. YUV420, RGB888)",
+        "image_size": "Resolution of the Image, after postprocessing by the isp",
+        "raw_img_format": "initial resolution of the sensor with this resolution the img will be acquired"
+    }
+}

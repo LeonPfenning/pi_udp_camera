@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../pi_udp_camera/.idea/pi_udp_camera.iml" filepath="$PROJECT_DIR$/../pi_udp_camera/.idea/pi_udp_camera.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pi-ethernet-camera.iml" filepath="$PROJECT_DIR$/.idea/pi-ethernet-camera.iml" />
     </modules>
   </component>
 </project>
