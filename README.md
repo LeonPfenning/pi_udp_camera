@@ -1,6 +1,7 @@
 # Raspberry & Pi Camera as UDP Camera
-A server client application to use a raspberry pi and a CSI-camera as udp network camera. The project is used for computer vision applications. It acquires (single) uncompressed images and sends them to the client. Depending on network speed and chosen image resolution the resulting framerate might be rather low. For more info on achievable fps check bellow.
-A basic interface between the computer and the raspberry pi is provided to setup the camera-mode (resolution, binning, image format, ...) and control the exposure time. This project allows to use the raspberry pi + camera to be used in headless mode by controlling it from an external device (computer).
+A server client application to use a raspberry pi and a CSI-camera as ethernet camera. The project is mostly designed for computer vision applications. Single uncompressed ("still") images can be polled by the Client.
+
+A basic interface between the computer and the raspberry pi is provided to initialize/set the camera-configuration (resolution, binning, image format, ...) and control the exposure time. This project allows to use a raspberry pi + camera similar to an industrial ethernet camera.
 
 
 
@@ -39,6 +40,8 @@ git clone https://github.com/LeonPfenning/pi_udp_camera.git
 - Make sure camera is working correctly (e.g. run basic example from picamera2)
 
 ### Setup _camera_config.json_ File
+**A _camera_config.json_ File for the HQ camera and the V2 camera is provided.**
+
 The _cameera_config.json_ file allows specifying custom camera setups that the camera can work in. Those setups can be selected from the client.
 The custom camera setups can vary depending on the individual requirements of the user. I personally focus on  full fov modi and some resized resolutions of those.
 My camera setups can be found in the example file for the HQ camera. If you use a different camera than the HQ Camera you should configure your own _camera_config.json_ file.
@@ -60,11 +63,12 @@ python3 /examples/Camera_Preview.py
 
 ___
 ## What to expect in terms of fps (HQ Camera)
-Keep in mind: We acquire and send uncompressed still images
+Keep in mind: We acquire and send uncompressed still images. The application is not targeting fast fps image streaming!
+Depending on used hardware, network speed and chosen camera settings the resulting framerate might be different.
 
 Network limitations - file transfer (mathematical example):
 
-  .     | resolution | formular      | file size (uncompressed) | theoretical fps (1Gbit/s)   | 
+format  | resolution | formular      | file size (uncompressed) | theoretical fps (1Gbit/s)   | 
 ------- |------------|---------------|--------------------------|-----------------------------|
 bgr888  | 4056x3040  | h * w * 3     | ~37.0 Mbyte              | ~3                          |
 yuv420  | 4056x3040  | h * w * (3/2) | ~18.5 Mbyte              | ~7                          |
@@ -96,7 +100,7 @@ for i in range(img_count):
 
 ```
 
-  .     | resolution | images taken | duration | measured fps | 
+format  | resolution | images taken | duration | measured fps | 
 ------- |------------|--------------|----------|--------------|
 bgr888  | 4056x3040  | 200          | 60 sec.  | 3            |
 yuv420  | 4056x3040  | 600          | 78 sec.  | 8            |
@@ -108,11 +112,10 @@ bgr888  | 507x380    | 600          | 15 sec.  | 40¹          |
 yuv420  | 507x380    | 600          | 15 sec.  | 40¹          |
 ¹ capped by sensor_mode: full FOV max 40fps
 #
-Keep in mind this project is not intended for live image streaming. But rather to acquire single high resolution, 
-uncompressed images for computer vision applications.
-Actual speed measured with direct ethernet connection (measured):
 
-  .     | resolution  | images taken | duration  | measured fps     |
+Actual speed measured with ethernet connection (measured):
+
+format  | resolution  | images taken | duration  | measured fps     |
 ------- |-------------|--------------|-----------|------------------|
 bgr888  | 4056x3040   | --           | --        | not implemented  |
 yuv420  | 4056x3040   | 50           | 16 sec.   | 3                |

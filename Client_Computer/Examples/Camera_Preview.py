@@ -7,7 +7,7 @@ Port = 8123
 myCam = RPICameraClient(ip=IP, port=Port, camera_config_file='camera_config_HQ.json',
 						 camera_modus='92', calibrated_camera=False)
 
-myCam.set_exposure(25000)        # 50000 => 20Hz
+myCam.set_exposure('25000')        # 50000 => 20Hz
 cnt = 0
 t = time.perf_counter()
 while True:
