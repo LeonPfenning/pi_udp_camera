@@ -1,7 +1,5 @@
-# Raspberry & Pi Camera as UDP Camera
+# Raspberry & Pi Camera as ethernet camera
 A server client application to use a raspberry pi and a CSI-camera as ethernet camera. The project is mostly designed for computer vision applications. Single uncompressed ("still") images can be polled by the Client.
-
-A basic interface between the computer and the raspberry pi is provided to initialize/set the camera-configuration (resolution, binning, image format, ...) and control the exposure time. This project allows to use a raspberry pi + camera similar to an industrial ethernet camera.
 
 
 
@@ -10,7 +8,7 @@ A basic interface between the computer and the raspberry pi is provided to initi
 ## Installation Server
 Use ssh or a display/keyboard setup to install the project on the Raspberry Pi (Server)
 ```
-git clone https://github.com/LeonPfenning/pi_udp_camera.git
+git clone https://github.com/LeonPfenning/raspberry-pi-as-ethernet-camera.git
 ```
 
 ```
@@ -20,7 +18,7 @@ sudo apt install -y python3-picamera2=0.3.9-1
 ## Installation Client
 
 ```
-git clone https://github.com/LeonPfenning/pi_udp_camera.git
+git clone https://github.com/LeonPfenning/raspberry-pi-as-ethernet-camera.git
 ```
 1. Navigate into "Client_Computer" folder
 2. Create venv
