@@ -1,4 +1,4 @@
-from Server_RaspberryPi.RPICameraServer import RPICameraServer
+from RPICameraServer import RPICameraServer
 import time
 
 def server_forever(config_file='camera_config_HQ.json'):

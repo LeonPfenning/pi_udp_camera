@@ -1,4 +1,6 @@
 import time
+import sys
+sys.path.insert(0, '..')
 from picamera2 import Picamera2
 from Core.MessageDescription import MessageDescription
 from Core.CameraConfiguration import CameraConfiguration

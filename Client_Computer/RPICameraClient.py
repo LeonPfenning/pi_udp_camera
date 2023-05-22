@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, '..')
 import cv2
 import numpy as np
 import time
