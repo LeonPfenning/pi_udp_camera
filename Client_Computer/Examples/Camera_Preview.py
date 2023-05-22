@@ -4,7 +4,9 @@ import time
 IP = '169.254.148.62'
 # IP = '192.168.1.13'
 Port = 8123
-myCam = RPICameraClient(ip=IP, port=Port, camera_config_file='camera_config_HQ.json',
+config_file_HQ = 'camera_config_HQ.json'
+config_file_V2 = 'camera_config_V2.json'
+myCam = RPICameraClient(ip=IP, port=Port, camera_config_file=config_file_V2,
 						 camera_modus='92', calibrated_camera=False)
 
 myCam.set_exposure('25000')        # 50000 => 20Hz

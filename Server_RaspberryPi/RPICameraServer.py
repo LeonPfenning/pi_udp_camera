@@ -99,10 +99,4 @@ class RPICameraServer(MessageDescription, CameraConfiguration):
 
 
 if __name__ == '__main__':
-    while True:
-        try:
-            Obj = RPICameraServer(camera_config_file='camera_config_HQ.json')
-            Obj.run()
-        except Exception as e:
-            print("exception: ", e)
-            time.sleep(5)
+    pass
