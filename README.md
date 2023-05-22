@@ -51,7 +51,7 @@ My camera setups can be found in the example file for the HQ camera. If you use 
 ### Run Code
 First run the script on the server (RPI):
 ```
-python3 RPICameraServer.py
+python3 ServerRun.py
 ```
 
 Then run an example script on the client (Computer):
