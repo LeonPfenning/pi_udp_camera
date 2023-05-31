@@ -26,6 +26,9 @@ class RPICameraClient(MessageDescription, CameraConfiguration):
         self.calibrated_camera = calibrated_camera
         if calibrated_camera:
             self.__init_calibrated_camera()
+        self.tvecs = None
+        self.rmat = None
+
 
     def __init_camera_modi(self, camera_config_file: str, camera_configuration_modus: str):
         # let camera know what modus to run in
@@ -68,17 +71,17 @@ class RPICameraClient(MessageDescription, CameraConfiguration):
         self.com_obj.send_msg(exp)
         time.sleep(0.5)
 
-    def preview_img(self, checkerboard_detection: bool = False):
+    def preview_img(self, img_save_path=None, checkerboard_detection: bool = False):
         img = self.get_image()
         self.im = img.copy()                            # deep copy of the file for saving
         if checkerboard_detection and self.calibrated_camera:
             img, self.rmat, self.tvecs = self._pose_estimation(img)
         im_resized = cv2.resize(img, (1014, 760))           # (760, 1014)    # (1520, 2028)
         cv2.imshow('Video', im_resized)
-        cv2.setMouseCallback('Video', self.__click_event)
+        cv2.setMouseCallback('Video', self.__click_event, param=img_save_path)
         cv2.waitKey(1)
 
-    def __click_event(self, event, x, y, flags, params):
+    def __click_event(self, event, x, y, flags, params=None):
         # checking for left mouse clicks
         if event == cv2.EVENT_LBUTTONDOWN:
             if self.tvecs is not None:
@@ -92,12 +95,18 @@ class RPICameraClient(MessageDescription, CameraConfiguration):
                 print("no transformation available")
         # checking for right mouse clicks
         if event == cv2.EVENT_RBUTTONDOWN:
-            self._save_img()
+            img_path = params
+            self.save_img(img=self.im, path=img_path)
 
-    def _save_img(self):
-        save_str = 'Img_data/img' + str(self.save_idx) + '.png'
+    def save_img(self, img, path=None):
+        if path:
+            save_str = path
+        else:
+            save_str = 'Img_data/'
+        save_str = save_str + 'img' + f"{self.save_idx:03}" + '.png'
         self.save_idx += 1
-        cv2.imwrite(save_str, self.im, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+        print(save_str)
+        cv2.imwrite(save_str, img, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         print("Img saved")
 
     def close(self):
@@ -109,6 +118,11 @@ class RPICameraClient(MessageDescription, CameraConfiguration):
                              [0.0, 5245, 808.5],
                              [0.0, 0.0, 1.0]])
         self.dist = np.array([0, 0, 0, 0, 0])
+
+        self.mtx = np.array([[1305.54755504,    0.,          823.79146023],
+                             [   0.,         1309.51471307,  640.22136024],
+                             [   0.,            0.,            1.,        ]])
+        self.dist = np.array([ 0.17180091, -0.32950401,  0.,          0.,         0.,        ])
         self.mapx, self.mapy = cv2.initUndistortRectifyMap(cameraMatrix=self.mtx, distCoeffs=self.dist,
                                                            R=None, newCameraMatrix=self.mtx,
                                                            size=self.image_size, m1type=5)

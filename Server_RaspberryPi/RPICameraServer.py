@@ -12,6 +12,7 @@ class RPICameraServer(MessageDescription, CameraConfiguration):
         MessageDescription.__init__(self)
         CameraConfiguration.__init__(self)
         self.camera_config_file = camera_config_file
+        print('camera calibration file: ', self.camera_config_file)
         self.com_obj = Server()
 
         self.picam2 = None
